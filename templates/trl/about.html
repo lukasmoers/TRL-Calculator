@@ -1,0 +1,80 @@
+{% extends 'trl/base.html' %}
+{% load static %}
+{% load trl_template_tags %}
+
+{% block title_block %}
+    About
+{% endblock %}
+
+{% block body_block %}
+	<h1 class="page-heading">About TRL</h1>
+	<br \>
+	
+	<span id="about-content">
+	<div class="overview-columns">
+		<div id="column-left">
+			<h2 class="about-subtitle" id="as-1">What is TRL</h2>
+			<div class="summary-box">
+				<div class="level-description">
+					<p>
+						The Technology Readiness Level (TRL) scale was created by 
+						<a href="https://www.nasa.gov/directorates/heo/scan/engineering/technology/technology_readiness_level" title="Technology Readiness Level | NASA (nasa.gov)"
+							target="_blank" rel="noopener">NASA</a> 
+						and further developed by the <a href="https://www.dau.edu/cop/stm/lists/tools/allitems.aspx" title="Tools - Default (dau.edu)"
+							target="_blank" rel="noopener">AFRL</a> 
+						to measure the maturity of new technologies, help monitor their progress and advance their development. 
+						It can inform discussions and decisions around a common point of reference, keeping stakeholders on the same page at all times.
+					</p>
+					<br />
+					<p>
+						Additionally, this TRL calculator can help you build a progress roadmap for your technology,
+						from initial idea all the way to usable product.
+						This way, you will always know exactly what you need to do, to get your project to the next level.
+					</p>
+				</div>
+			</div>
+		</div>
+		
+		<div id="column-right">
+			<h2 class="about-subtitle" id="as-2">How it works</h2>
+			<div class="summary-box">
+				<div class="level-description">
+					<p>
+						Technology readiness is measured in nine discrete levels, based on the completion of specific requirements 
+						in your project's research, development and deployment process.
+					</p>
+					<br />
+					<p>
+						For commercial products, reaching TRL 9 means that an actual system has been proven in its operational environment, 
+						whereas for theoretical concepts or research, you can work towards an experimental proof of concept for TRL 3.
+					</p>
+					<br />
+					<p>
+						Explore the roadmap below, for more details on each TRL. 
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	</span>
+	<br /><br />
+	
+	<h2 class="about-subtitle" id="as-3">TRL Roadmap</h2>
+	<div class="level-description" id="full-column">
+		<p>A TRL is considered complete once your project fulfills {% get_complete_cutoff %}% of its requirements, as long as all preceeding levels are complete too.</p>
+	</div>
+    {% get_roadmap %}
+	
+    <div class="about-p" id="screen">
+		<p>Click on any of the levels to learn more about them.</p>
+	</div>
+	<br />
+	
+	<p class="left-explanation" id="confidentiality">
+		<b>Confidentiality statement </b><br />
+		Any information entered is securely stored on University of Glasgow servers. 
+		All processing is automated and for the purposes of carrying out technology readiness calculations and presenting you with the information you need. 
+		No information is shared with third parties.
+	</p>
+{% endblock %}
+

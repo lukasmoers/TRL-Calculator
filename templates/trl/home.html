@@ -1,0 +1,42 @@
+{% extends 'trl/base.html' %}
+{% load static %}
+
+{% block title_block %}
+    Home
+{% endblock %}
+
+{% block body_block %}
+	<h1 class="page-heading" id="main-heading">TECHNOLOGY READINESS LEVEL<br/>CALCULATOR</h1>
+	<br /><br />
+	<h2 class="page-subheading" id="main-subheading">
+		What can the TRL Calculator do for you?<br />
+	</h2>
+	<div class="panel">
+		<div class="panel-text">
+			<h2 class="panel-heading" id="ph-1">Evaluate your progress</h2>
+			<p>Use a comprehensive NASA-developed algorithm to determine and validate the maturity of your project, research idea or product under development.</p>
+		</div>
+		<img class="panel-img" src="{% static 'img/evaluation.png' %}" alt="Evaluate your progress"/>
+	</div>
+	<br />
+	<div class="panel">
+		<div class="panel-text">
+			<h2 class="panel-heading" id="ph-2">Take it to the next level</h2>
+			<p>Advance towards larger system integration and/or market launch, with a detailed roadmap tailored to your project's development needs.</p>
+		</div>
+		<img class="panel-img" src="{% static 'img/overview.png' %}" alt=">Take it to the next level"/>
+	</div>
+	<br />
+	<div class="panel">
+		<div class="panel-text">
+			<h2 class="panel-heading" id="ph-3">Monitor multiple projects</h2>
+			<p>Keep a portfolio of all your projects, so you can efficiently monitor and update their progresss as you go along.</p>
+		</div>
+		<img class="panel-img" src="{% static 'img/portfolio.png' %}" alt="Monitor multiple projects"/>
+	</div>
+	<br /><br />
+
+	<form action="{% url 'trl:new_project_details' %}" method="GET">
+		<button class="btn-continue" id="btn-start" type="submit">GET STARTED</button>
+	</form>
+{% endblock %}

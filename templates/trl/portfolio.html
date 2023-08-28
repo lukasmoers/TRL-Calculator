@@ -1,0 +1,79 @@
+{% extends 'trl/base.html' %}
+{% load static %}
+{% load trl_template_tags %}
+
+{% block title_block %}
+    Portfolio
+{% endblock %}
+
+{% block body_block %}
+    <h1 class="page-heading">Portfolio</h1>
+	<div class="left-align" hx-target="this" hx-swap="outerHTML">
+        <b>{{ user.full_name }} </b><br />
+		<b>{{ user.guid }} </b><br />
+	</div>
+	<br />
+	<a class="btn-continue" id="btn-create" href="{% url 'trl:new_project_details' %}">NEW PROJECT</a>
+	<br /><br /><br />
+
+	{% if projects %}
+		<p class="left-explanation">Click on any of your projects to view or edit them:</p>
+	{% else %}
+		<br/>
+	{% endif %}
+	
+	<table>
+		<tr>
+			<th class="left-align-column">Project</th>
+			<th class="fixed-width-column">Readiness</th>
+			<th class="fixed-width-column">Modified</th>
+			<th class="fixed-width-column">Created</th>
+			<th class="fixed-width-column" id="delete-column"></th>
+		</tr>
+	</table>
+	
+	<div class="vertical-scroll">
+		<table id="project-table">
+			{% if projects %}
+				{% for project in projects %}
+				<tr class="grey-box">
+					<td class="left-align-column" id="link-{{ forloop.counter }}">
+						{{ project.name }}<a href="{% url 'trl:project_overview' project.pk %}"></a>
+					</td>
+					<td class="fixed-width-column">
+						{% if project.level.number == 0 %}
+							-
+						{% else %}
+							{{ project.level }}
+						{% endif %}
+						<a href="{% url 'trl:project_overview' project.pk %}"></a>
+					</td>
+					<td class="fixed-width-column">
+						{{ project.last_modified_date|date:"d M, Y" }}<a href="{% url 'trl:project_overview' project.pk %}"></a>
+					</td>
+					<td class="fixed-width-column">
+						{{ project.creation_date|date:"d M, Y" }}<a href="{% url 'trl:project_overview' project.pk %}"></a>
+					</td>
+					<td class="fixed-width-column" id="delete-column">
+						<a href="{% url 'trl:delete_project' project.pk %}"
+						onclick="return confirm('Are you sure you want to delete project {{project.name}}? \nYou will not be able to undo this action.');">
+							<img class="icon" src="{% static 'img/delete-closed.png' %}" 
+							onmouseover="this.src='{% static 'img/delete-open.png' %}';"
+							onmouseout="this.src='{% static 'img/delete-closed.png' %}';"/></a>
+					</td>
+				</tr>
+				{% endfor %}
+			{% else %}
+				<tr class="grey-box">
+					<td class="left-align-column">
+						<i>You currently have no projects to display.</i>
+					</td>
+					<td class="fixed-width-column"></td>
+					<td class="fixed-width-column"></td>
+					<td class="fixed-width-column"></td>
+					<td class="fixed-width-column" id="delete-column"></td>
+				</tr>
+			{% endif %}
+		</table>
+	</div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% load static %}
+{% load trl_template_tags %}
+
+<span id="roadmap" hx-get="./update" hx-trigger="levelUpdate from:body">
+	{% if project %}
+		<div class="tooltip" id="roadmap-hint">
+			<img class="hint-big" src="{% static 'img/hint-blue.png' %}" alt="?">
+			<div class="hint">
+				<b>What do the colours mean?</b><br/>
+				A TRL becomes <b>yellow</b> when at least <b>{% get_semi_cutoff %}%</b> of its requirements are complete, 
+				or <b>green</b> when at least <b>{% get_complete_cutoff %}%</b> of its requirements are complete,  
+				as long as all preceeding levels have reached that completion rate too.
+			</div>
+		</div>
+	{% endif %}
+	
+	<div class="road">
+		{% if project %}
+			<div id="complete-0"></div>
+		{% else %}
+			<div id="incomplete-0"></div>
+		{% endif %}
+		{% if project.level.number == 9 %}
+			<div id="future-10"></div>
+		{% endif %}
+	</div>
+		
+	<div id="road-coloured">
+		{% for level in levels %}
+			{% if level.number|is_complete:project %}
+				<div id="complete-{{ level.number }}"></div>
+			{% elif  level.number|is_semi:project %}
+				<div id="semi-{{ level.number }}"></div>
+			{% else %}
+				<div class="incomplete" id="incomplete-{{ level.number }}"></div>
+			{% endif %}
+		{% endfor %}
+	</div>
+	
+	<div class="steps">
+		<div>
+		{% if functional %}
+			<a class="step" href="{% url 'trl:update_project_details' project.pk %}">
+				<img class="step-img" src="{% static 'img/clipboard-blue.png' %}" alt="Project Settings" title="Project settings"/>
+				SETTINGS
+			</a>
+			{% for level in levels %}
+			<a class="step" href="{% url 'trl:project_level_requirements' project.pk forloop.counter %}">
+				{% if level.number|is_complete:project %}
+					<img class="step-img" src="{% static 'img/green-pin.png' %}" alt="{{ level }}" title="{{ level }} complete"/>
+				{% elif level.number|is_semi:project %}
+					<img class="step-img" src="{% static 'img/yellow-pin.png' %}" alt="{{ level }}" title="{{ level }} nearly complete"/>
+				{% else %}
+					<img class="step-img" src="{% static 'img/light-blue-pin.png' %}" style="filter: grayscale(1);" alt="{{ level }}" title="{{ level }}"/>
+				{% endif %}
+				{{ level }}
+			</a>
+			{% endfor %}
+		{% else %}
+			{% if current_level != -1 %}
+				<div class="step">
+					<img class="step-img" src="{% static 'img/clipboard-grey.png' %}" alt="Project Settings"/>
+					SETTINGS
+				</div>
+			{% endif %}
+			{% for level in levels %}
+				{% if current_level == -1 %}
+					<div class="step" id="step-{{ level.number }}" onclick="showDescription(this.id)">
+				{% else %}
+					<div class="step">
+				{% endif %}
+						<img class="step-img" id="step-img-{{ level.number }}" src="{% static 'img/light-blue-pin.png' %}" style="filter: grayscale(1);" alt="{{ level }}"/>
+						{{ level }}
+					</div>
+			{% endfor %}
+		{% endif %}
+		</div>
+	</div>
+</span>
+
+<script>
+	var levels_string = JSON.stringify({{ levels_json|safe }});
+</script>

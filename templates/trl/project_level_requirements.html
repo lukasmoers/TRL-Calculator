@@ -1,0 +1,126 @@
+{% extends 'trl/base.html' %}
+{% load static %}
+{% load trl_template_tags %}
+
+{% block title_block %}
+	{{ level }}
+{% endblock %}
+
+{% block body_block %}
+	<h1 class="page-heading">TRL Calculation</h1>
+	<br />
+	<div class="left-align">
+		<b>Project Name:&nbsp;</b><span id="project-name">{{ project.name }}</span><br />
+		{% if project.sophia_numbers %}
+			<b>Sophia Number(s):&nbsp;</b><span id="sophia-numbers">{{ project.sophia_numbers }}</span><br />
+		{% endif %}
+		<b>Technology Type:&nbsp;</b><span>{{ project.technology|verbose_tech }}</span><br />
+		<b>Readiness Categories:&nbsp;</b><span>{{ categories|cat_list }}</span><br />
+	</div>
+	<a class="btn-continue" id="btn-overview" href="{% url 'trl:project_overview' project.pk %}">PROJECT REPORT</a>
+	
+	<br /><br /><br /><br /><br /><br/>
+	{% get_roadmap project level.number True %}
+	<br />
+	
+	<h2 class="page-subheading" id="level-title">{{ level }}: {{ level.title }}</h2>
+	{% if requirements %}
+		<p class="explanation">
+				To what extent are the following aspects of your project complete? <br />
+				Enter the percentage of completion and support with optional comments.<br />
+				<br />
+				<i>Percentages under 100% do not contribute to level completion, <br />but they can help you keep track of your progress.</i><br />
+		</p>
+		<br />
+		<form id="RequirementsForm" method="post" action="{% url 'trl:project_level_requirements' project.pk level.number %}" enctype="multipart/form-data">
+			{% csrf_token %}
+			
+			{% for cat in categories %}
+				{% if requirements|filter_category:cat %}
+					<h2 class="page-subheading">{{ cat }}</h2><br />
+					{% for req in requirements|filter_category:cat %}
+						<div class="requirement">
+							<span class="pair">
+								<span class="req">{{ req.requirement }}:</span>
+
+							</span>
+							<span class="pair">
+								<input type="range" min="0" max="100" value="{{ req.percentage }}" class="slider" id="slider-{{ req.pk }}" name="slider-{{ req.pk }}"
+									title="Slide percentage of completion"
+									oninput="updatePercent(this, this.id)" hx-post="." hx-swap="none" hx-trigger="change"/>
+								<input type="number" min="0" max="100" class="slider-percent" id="percent-{{ req.pk }}" value="{{ req.percentage }}"
+								title="Edit percentage of completion"
+								oninput="updateSlider(this, this.id)" hx-post="." hx-swap="none" hx-trigger="change"/><span>%</span>
+							</span>
+							<span class="pair">
+								<button class="btn-square" id="tick-{{ req.pk }}" type="button" name="tick-{{ req.pk }}" title="Mark 100% complete"
+									onclick="markComplete(this.id)" hx-post="." hx-swap="none" hx-trigger="click" ><img class="icon" src="{% static 'img/tick.png' %}"/></button>
+								
+								{% if req.comment %}
+									<button class="btn-square-special" id="bubble-{{ req.pk }}" type="button" name="bubble-{{ req.pk }}" title="Edit comment"
+										onclick="expandComment(this, this.id)"><img class="icon" src="{% static 'img/comment.png' %}"/></button>
+								{% else %}
+									<button class="btn-square" id="bubble-{{ req.pk }}" type="button" name="bubble-{{ req.pk }}" title="Add comment"
+										onclick="expandComment(this, this.id)"><img class="icon" src="{% static 'img/comment.png' %}"/></button>
+								{% endif %}
+								
+								{% if req.requirement.explanation %}
+									<div class="tooltip" id="req-{{ req.pk }}">
+										<img class="hint-big" src="{% static 'img/hint-blue.png' %}" alt="?">
+										<div class="hint">
+											{{ req.requirement.explanation }}
+										</div>
+									</div>
+								{% endif %}
+							</span>
+						</div>
+						<br />
+						<textarea class="comment" id="comment-{{ req.pk }}" name="comment-{{ req.pk }}" maxlength="1024" placeholder="Add comment..." style="display:none"
+							oninput="editComment(this, this.id)" hx-post="." hx-swap="none" hx-trigger="change">{{ req.comment }}</textarea>
+						<br id="gap-{{ req.pk }}" style="display:none" />
+					{% endfor %}
+					<br />
+				{% endif %}
+			{% endfor %}
+
+			<br /><br />
+			<span class="nav-buttons">
+				{% if level.number == 1 %}
+					<a class="btn-back" href="{% url 'trl:update_project_details' project.pk %}">
+				{% else %}
+					<a class="btn-back" href="{% url 'trl:project_level_requirements' project.pk previous %}">
+				{% endif %}
+						BACK</a>
+				{% if level.number|is_not_max_level %}
+					<a class="btn-back" href="{% url 'trl:project_level_requirements' project.pk next %}">NEXT</a>
+				{% endif %}	
+			</span>
+		</form>
+		<br />
+		
+	{% else %}
+		<br />
+		<p class="explanation">
+			<i>
+				{{ level }} does not involve any {{ categories|cat_list }} requirements for {{ project.technology|verbose_tech }} technologies.<br />
+				{% if level.number|is_not_max_level %}
+					You can move on to the next level.
+				{% endif %}
+			</i>
+		</p>
+		<br /><br />
+	{% endif %}
+	
+	{% if level.number == 1 %}
+		<a href="{% url 'trl:update_project_details' project.pk %}">
+	{% else %}
+		<a href="{% url 'trl:project_level_requirements' project.pk previous %}">
+	{% endif %}
+			<img id="carousel-left" src="{% static 'img/carousel-left.png' %}">
+		</a>
+	{% if level.number|is_not_max_level %}
+		<a href="{% url 'trl:project_level_requirements' project.pk next %}">
+			<img id="carousel-right" src="{% static 'img/carousel-right.png' %}">
+		</a>
+	{% endif %}
+{% endblock %}

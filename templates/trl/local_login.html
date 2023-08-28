@@ -1,0 +1,24 @@
+{% extends 'trl/base.html' %}
+{% load static %}
+
+{% block title_block %}
+    Login
+{% endblock %}
+
+{% block body_block %}
+	<h1 class="page-heading">Login</h1>
+	<form id="login_form" method="post" action="{% url 'trl:login' %}">
+		{% csrf_token %}
+		
+		<div class="left-align">
+			<h3>GUID: </h3><input type="text" class="long-info" name="guid" value="{{ guid }}" onfocus="resetError()" required>
+			{% if error %}
+				<p class="error-message" id="login-error">{{ error }}</p>
+			{% endif %}
+			<br />
+			<h3>Password: </h3><input type="password" class="long-info" name="password" value="" required><br /><br />
+			<a class="login-link" href="{% url 'trl:register' %}">No account? Register here.</a>
+		</div>
+		<button class="btn-continue" id="btn-overview" type="submit">LOGIN</button>
+	</form>
+{% endblock %}

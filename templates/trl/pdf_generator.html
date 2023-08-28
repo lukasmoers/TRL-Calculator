@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+{% load static %}
+{% load trl_template_tags %}
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+	</head>
+
+	<body>
+		<div class="pdf-title-text">Technology Readiness Level (TRL) Report</div>
+		<br/><br/>
+		
+		<!-- Project General Information -->
+		<div class="small-header-text">Project Information</div>
+		<div class="information-text">
+			<b>Project Name: </b>{{ project.name }} <br/>
+			{% if project.sophia_numbers %}
+				<b>Sophia Number(s): </b>{{ project.sophia_numbers }}<br />
+			{% endif %}
+			<b>Technology Type: </b>{{ project.technology|verbose_tech }}<br />
+			<b>Readiness Categories: </b>{{ categories|cat_list }}<br />
+			<b>Technology Readiness Achieved: </b> {{ project.level }}<br />
+		</div>
+		<br/>
+		
+		<div class="small-header-text">Technology Readiness Summary</div>
+		<div class="information-text">
+			<b>{{ project.level }}: {{ project.level.title }}</b><br/>
+			{{ project.level.description }}
+		</div>
+		<br/>
+		
+		<div class="small-header-text">
+			TRL Progress Timeline
+		</div>
+		<br/>
+		<table id="timeline-table">
+			<tr>
+				<th>Level</th>
+				<th>Completion</th>
+				<th>Date Completed</th>
+			</tr>
+
+			{% for completion in project_levels %}
+				<tr>
+					<td>{{ completion.level }}</td>
+					<td>{{ completion.percentage }}%</td>
+					{% if completion.level.number|is_complete:project %}
+						<td>{{ completion.completion_date|date:"d M, Y" }}</td>
+					{% else %}
+						<td>-</td>
+					{% endif %}
+				</tr>
+			{% endfor %}
+		</table>
+		{% if version == "Extended" %}
+			<div class="page-break"></div>
+			{% if from_level == to_level %}
+				<div class="pdf-title-text">Detailed Level Requirements ({{ from_level }})</div> <br/>
+			{% else %}
+		   		<div class="pdf-title-text">Detailed Level Requirements ({{ from_level }} - {{ to_level.number }})</div> <br/>
+			{% endif %}
+			<!-- Full Information -->
+			{% for level in levels_extended %}
+				<div class="small-header-text">{{ level }}: {{ level.title }}</div>
+				<div class="information-text">{{ level.description }}</div><br/>
+				
+				{% if requirements|filter_level:level %}
+					<table>
+						<tr>
+							<th>Requirement</th>
+							<th>Completion</th>
+						</tr>
+						{% for req in requirements|filter_level:level %}
+							<tr>
+								<td>
+									<div class="req-text">{{ req.requirement }}</div>
+									{% if comments %}
+										{% if req.comment %}
+											<div class="comment-text"> <b>Comment:</b> {{ req.comment }}</div>
+										{% endif %}
+									{% endif %}
+								</td>
+								<td>
+									<div class="percentage-text">{{ req.percentage }}%</div>
+								</td>
+							</tr>
+						{% endfor %}
+						</div>
+					</table>
+				{% else %}
+					<div class="information-text">
+						<i>{{ level }} does not involve any {{ categories|cat_list }} requirements for {{ project.technology|verbose_tech }} technologies.</i>
+					</div><br />
+				{% endif %}
+				{% if level.number < to_level.number %}
+					<div class="page-break"></div>
+				{% endif %}
+			{% endfor %}
+		{% endif %}
+	</body>
+</html>
+
+
+<style> 
+    @page{
+        margin: 2.54cm;
+        size: A4;
+		font-family: Arial, sans-serif;
+		font-size: 11pt;
+		@top-right{
+			padding-top: 20px;
+			margin-right: -2px;
+			content: "TRL Report";
+		}
+        @bottom-right{
+			padding-bottom: 20px;
+			content: "Page " counter(page) " of " counter(pages);
+        }
+		@bottom-left{
+			padding-bottom: 40px;
+			content: "Confidential property of the University of Glasgow \A Copyright © 2023 University of Glasgow";
+			white-space: pre-wrap;
+		}
+	}
+
+	@page :first {
+		@top-right {
+			content: none;
+		}
+	}
+
+    body {
+        display: block;
+        margin: 0px;
+        font-family: Arial, sans-serif;
+    }
+
+    .pdf-title-text{
+        position: relative;
+        font-size: 18pt;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: underline;
+        margin-left: calc(50% - 325px);
+    }
+
+    .small-header-text{
+        font-size: 14pt;
+        font-weight: bold;
+        text-align: left;
+        text-decoration: underline;
+        line-height: 30px;
+    }
+
+    .information-text{
+        font-size: 12pt;
+        padding: 10px 0px;
+        text-align: justify;
+        line-height: 30px;
+    }
+
+    .display-trl {
+        text-align: center;
+        font-size: 45pt;
+    }
+
+    table, td, th {  
+        border: 1px solid #8d8d8d;
+    }
+
+    table {
+        margin-top: 12px;
+        border-collapse: collapse;
+        width: 100%;
+        text-align: left;
+    }
+
+    #timeline-table {
+        text-align: center;
+        margin-top: 0px;
+    }
+
+    tr {
+        break-inside: avoid;
+    }
+
+    th, td {
+        border-collapse: collapse;
+        padding: 8px 10px;
+        font-weight: normal;
+    }
+
+	th { 
+		font-weight: bold;
+	}
+
+    .page-break {
+        page-break-before:always;
+    }
+	
+	.req-text, .percentage-text {
+		font-size: 12pt;
+        font-weight: normal;
+        text-align: left;  
+	}
+
+    .percentage-text{
+        text-align: center;
+    }
+
+    .comment-text{
+        padding-top: 8px;
+        font-size: 12pt;
+        font-weight: normal;
+        text-align: left;
+        line-height: 22px;
+    }
+</style>

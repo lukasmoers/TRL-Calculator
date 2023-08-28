@@ -1,0 +1,95 @@
+{% extends 'trl/base.html' %}
+{% load static %}
+{% load trl_template_tags %}
+
+{% block title_block %}
+    Project Report
+{% endblock %}
+
+{% block body_block %}
+    <h1 class="page-heading">Project Report</h1>
+    <br />
+	<div class="left-align">
+		<b>Project Name:&nbsp;</b><span id="project-name">{{ project.name }}</span><br />
+		{% if project.sophia_numbers %}
+			<b>Sophia Number(s):&nbsp;</b><span id="sophia-numbers">{{ project.sophia_numbers }}</span><br />
+		{% endif %}
+		<b>Technology Type:&nbsp;</b><span>{{ project.technology|verbose_tech }}</span><br />
+		<b>Readiness Categories:&nbsp;</b><span>{{ categories|cat_list }}</span><br />
+	</div>
+	<div class="right-align">
+		<b>Created:&nbsp;</b><span>{{ project.creation_date|date:"d M, Y" }}</span><br />
+		<b>Modified:&nbsp;</b><span>{{ project.last_modified_date|date:"d M, Y" }}</span><br />
+	</div>
+	<a class="btn-continue" id="btn-update" href="{% url 'trl:update_project_details' project.pk %}">UPDATE PROJECT</a>
+	<br /><br /><br /><br /><br /><br/>
+
+	{% get_roadmap project project.level True %}
+	
+    <div class="overview-box">
+		<p id="overview-message">
+			Your project is currently at an overall:
+		</p>
+		<br />
+        <div class="overview-result">
+            TRL {{ project.level.number }}
+        </div>
+    </div>
+	<br /><br />
+	
+
+	<div class="overview-columns">
+		<div id="column-left">
+			<h1 class="about-subtitle" id="as-3">What is {{ project.level }}?</h1>
+			<div class="summary-box">
+				<div class="level-description">
+					<p><b>{{ project.level }} ({{ project.level.title }})</b></p>{{ project.level.description }}
+				</div>
+				<br />
+			</div>
+		</div>
+		
+		<div id="column-right">
+			<h1 class="about-subtitle" id="as-4">What comes next?</h1>
+			<div class="summary-box">
+				<div class="level-description">
+					{% if project.level.number != next_level.number %}
+						<p><b>{{ next_level }} ({{ next_level.title }})</b></p>
+						Here are some of the things you can work on, to get your project to the next level:
+						<br /><br />
+						<ol>
+						{% for req in requirements %}
+							<li class="req-indent">{{ req.requirement }} <b>({{ req.percentage }}% complete)</b>.</li>
+						{% endfor %}
+						</ol>
+						<br />
+						Click <a href="{% url 'trl:project_level_requirements' project.pk next_level.number %}">{{ next_level }}</a> on the roadmap for a full list.
+					{% else %}
+						<p><b>Congratulations!</b></p> Your project is already at the maximum readiness level on the TRL scale.
+					{% endif %}
+				</div>
+				<br />
+			</div>
+		</div>
+	</div>
+	<br/>
+	<h1 class="about-subtitle" id="as-5">Export TRL Report</h2>
+	<form id="GeneratePDFForm" method="post" action="{% url 'trl:pdf_generator' project.pk %}" enctype="multipart/form-data" target="_blank" rel="noopener">
+		{% csrf_token %}
+		<div class="summary-box">
+			<div class="level-description">
+				<div class="about-p" id="pdf-explanation">
+					Get your project's TRL Report in <b>PDF</b> format. <br />
+					Choose the <span>'Summary'</span> version for a high-level overview of the level completions, or <span>'Extended'</span> for the complete report, 
+					including all requirement completions and/or your comments for the selected levels.
+				</div>
+				<div class="custom-pdf"><p><b>{{ pdf_form.version.help_text }}:</b></p>{{ pdf_form.version }}</div><br />
+				<div class="custom-pdf"><p><b>Requirement completions for levels:</b></p>{{ pdf_form.from_level }}&nbsp;&nbsp;to&nbsp;&nbsp;{{ pdf_form.to_level }}</div><br />
+				<div class="custom-pdf"><p><b>{{ pdf_form.comments.help_text }}:</b></p>{{ pdf_form.comments }}</div>
+				<input type="submit" class="btn-back" id="btn-pdf" value="GET PDF"/>
+				<br />
+			</div>
+		</div><br />
+		
+	</form>
+{% endblock %}

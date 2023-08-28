@@ -1,0 +1,20 @@
+{% extends 'trl/project_details.html' %}
+{% load static %}
+{% load trl_template_tags %}
+
+{% block title_block %}
+    Update Project
+{% endblock %}
+
+{% block heading_block %}
+	Update Project
+{% endblock %}
+
+{% block form_url_block %}
+	<a class="btn-continue" id="btn-overview" href="{% url 'trl:project_overview' project.pk %}">PROJECT REPORT</a>
+	<form id="DetailsForm" method="post" action="{% url 'trl:update_project_details' project.pk %}" enctype="multipart/form-data">
+{% endblock %}
+
+{% block roadmap %}
+	{% get_roadmap project 0 True %}
+{% endblock %}

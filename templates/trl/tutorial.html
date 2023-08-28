@@ -1,0 +1,62 @@
+{% extends 'trl/base.html' %}
+{% load static %}
+{% load trl_template_tags %}
+
+{% block title_block %}
+    How to use
+{% endblock %}
+
+{% block body_block %}
+	<h1 class="page-heading">How to use</h1>
+	<p class="left-explanation">Watch these videos to learn how to make the most of this TRL Calculator:</p>
+	
+	<div id="tutorial-grid">
+		<div class="tutorial-column">
+			<h1 class="about-subtitle" id="as-6">Create <span>a project</span></h1>
+			<img src="{% static 'img/create-thumbnail.png' %}" href="#" class="thumbnail" onclick="toggleVideo1();" />
+			
+			<div class="tutorial-vid" id="create">
+				<video id="vid-create" src="{% static 'vid/how_to_create_a_project.mp4' %}" poster="{% static 'img/create-thumbnail.png' %}" controls></video>
+				<img src="{% static 'img/close_video.png' %}" id="close-btn-create" onclick="toggleVideo1();"/>
+			</div>
+			<br />
+			<div class="level-description">
+				You can <b>create</b> a new project from the <b>homepage</b> or your <b>portofolio</b>. 
+				You can then customise the calculator according to your project's needs, and begin the TRL calculations.
+			</div>
+		</div>
+		
+		<div class="tutorial-column">
+			<h1 class="about-subtitle" id="as-7">Update <span>a project</span></h1>
+			<img src="{% static 'img/update-thumbnail.png' %}" href="#" class="thumbnail" onclick="toggleVideo2();"></img>
+			
+			<div class="tutorial-vid" id="update">
+				<video id="vid-update" src="{% static 'vid/how_to_update_a_project.mp4' %}" poster="{% static 'img/update-thumbnail.png' %}" controls></video>
+				<img src="{% static 'img/close_video.png' %}" id="close-btn-portfolio" onclick="toggleVideo2();"/>
+			</div>
+			<br />
+			<div class="level-description">
+				Your <b>portfolio</b> is where you can find all of your projects, to <b>monitor</b>, <b>update</b> or <b>delete</b> them. 
+				As you update the completion percentage of different TRL requirements, 
+				the interactive <b>roadmap</b> changes colour to reflect your project's current TRL. 
+			</div>
+			
+		</div>
+
+		<div class="tutorial-column">
+			<h1 class="about-subtitle" id="as-3">View/Export <span>a report</span></h1>
+			<img src="{% static 'img/report-thumbnail.png' %}" href="#" class="thumbnail" onclick="toggleVideo3();"></img>
+			
+			<div class="tutorial-vid" id="report">
+				<video id="vid-report" src="{% static 'vid/how_to_view_or_export_a_report.mp4' %}" poster="{% static 'img/report-thumbnail.png' %}" controls></video>
+				<img src="{% static 'img/close_video.png' %}" id="close-btn-results" onclick="toggleVideo3();"/>
+			</div>
+			<br />
+			<div class="level-description">
+				Your project's <b>TRL report</b> contains an overview of its readiness level, and guidance for getting to the next TRL. 
+				You can <b>export</b> this to <b>PDF format</b>, to easily download or print it.
+			</div>
+			
+		</div>
+	</div>
+{% endblock %}

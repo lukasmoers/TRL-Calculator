@@ -1,0 +1,67 @@
+{% extends 'trl/base.html' %}
+{% load static %}
+{% load trl_template_tags %}
+
+{% block title_block %}
+{% endblock %}
+
+{% block body_block %}	
+	<h1 class="page-heading">
+		{% block heading_block %}
+		{% endblock %}
+	</h1>
+	<br />
+	
+	{% block form_url_block %}
+	{% endblock %}
+		{% csrf_token %}
+		<div onkeydown="preventSubmitOnEnter(event)">
+		<div class="left-align">
+			<h3>{{ details_form.name.help_text }}: </h3>
+			<span>{{ details_form.name }}</span><br/>
+			<h3>{{ details_form.sophia_numbers.help_text }}: </h3>
+			<span>{{ details_form.sophia_numbers }}</span>
+			<span class="clarification">&nbsp;(if applicable)</span><br/>
+		</div>
+		<span class="error-message">{{ details_form.name.errors|get_item:0 }}</span>
+		<br /><br /><br/><br/>
+		
+		{% block roadmap %}
+		{% endblock %}
+		<br />
+		
+		{% for field in details_form %}
+			{% if field != details_form.name and field != details_form.sophia_numbers %}
+				<br />
+				<h2 class="page-subheading">{{ field.help_text }}</h2>
+				{% if field == details_form.technology %}
+					<p class="explanation">(select the option that applies to your project the best)</p>
+				{% elif field == details_form.categories %}
+					<p class="explanation">(select all that you would like to include)</p>
+				{% endif %}
+				<br />{{ field }}
+				<span class="error-message">{{ field.errors|get_item:0 }}</span>
+				{% if field == details_form.level %}
+				<p class="error-message">
+					Starting with TRL 1 is strongly recommended for accurate calculations. <br />
+					Please use caution if selecting otherwise.
+				</p>
+				{% endif %}
+				<br />
+			{% endif %}
+		{% endfor %}
+		<br /><br />
+		</div>
+		<span class="nav-buttons">
+			<input class="btn-back" type="submit" value="NEXT" name="continue-btn">
+		</span>
+		
+		<button type="submit">
+			<img id="carousel-right" src="{% static 'img/carousel-right.png' %}">
+		</button>
+	</form>
+	
+<script>
+	var userProjects = "{{ project_names }}";
+</script>
+{% endblock %}

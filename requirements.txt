@@ -1,0 +1,12 @@
+asgiref==3.6.0
+Django==4.1.5
+Pillow==9.4.0
+sqlparse==0.4.3
+weasyprint==57.2
+django_htmx==1.13.0
+mysqlclient==2.1.1
+coverage==7.2.1
+requests==2.28.2
+python-dotenv==1.0.0
+mutpy==0.6.1
+django-mutpy==0.1.2

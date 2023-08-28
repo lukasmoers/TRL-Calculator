@@ -1,0 +1,24 @@
+{% extends 'trl/base.html' %}
+{% load static %}
+{% load trl_template_tags %}
+
+{% block title_block %}
+    Error
+{% endblock %}
+
+{% block body_block %}
+    <div class="error-content">
+        <h1>Oops, something went wrong.</h1><br />
+        
+        {% if button == "home" %}
+			<p>Please make sure you're accessing the correct address!</p>
+			<p>Visit our homepage or try again later.</p><br /><br /><br />
+			<a class="btn-back" href="{% url 'trl:home' %}">HOMEPAGE</a>
+		{% else %}
+			<p>That's on us! Please go back and try again later.</p><br /><br /><br />
+			<a class="btn-back" href="{{ button }}">GO BACK</a>
+		{% endif %}
+		<br />
+		<p class="explanation"><i>Please <a href="mailto:innovation@glasgow.ac.uk">contact us</a> if you think this is a mistake.</i></p>
+    </div> 
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'trl/base.html' %}
+{% load static %}
+{% load trl_template_tags %}
+
+{% block title_block %}
+    Page Not Found
+{% endblock %}
+
+{% block body_block %}
+    <div class="error-content">
+        <h1>Oops, we couldn't find this page.</h1><br />
+        
+		{% if button == "home" %}
+			<p>It looks like the address you used is invalid or no longer exists!</p>
+			<p>Please make sure you're using the right link, or start from our homepage.</p><br /><br /><br />
+			<a class="btn-back" href="{% url 'trl:home' %}">HOMEPAGE</a>
+		{% else %}
+			<p>That's on us! Please go back and try again later.</p><br /><br /><br />
+			<a class="btn-back" href="{{ button }}">GO BACK</a>
+		{% endif %}
+		<br />
+		<p class="explanation"><i>Please <a href="mailto:innovation@glasgow.ac.uk">contact us</a> if you think this is a mistake.</i></p>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,19 @@
+{% extends 'trl/project_details.html' %}
+{% load static %}
+{% load trl_template_tags %}
+
+{% block title_block %}
+    New Project
+{% endblock %}
+
+{% block heading_block %}
+	New Project
+{% endblock %}
+
+{% block form_url_block %}
+	<form id="DetailsForm" method="post" action="{% url 'trl:new_project_details' %}" enctype="multipart/form-data">
+{% endblock %}
+
+{% block roadmap %}
+	{% get_roadmap project 0 %}
+{% endblock %}

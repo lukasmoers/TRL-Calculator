@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+{% load static %}
+{% load trl_template_tags %}
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+		
+		<title>
+			{% block title_block %}
+				Welcome
+			{% endblock %}
+			| TRL Calculator
+		</title>
+		
+		<meta name="description" content="The TRL Calculator can determine the maturity of your project, and help you take the next step." />
+		
+		<!--Favicon-->
+		<link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon/apple-touch-icon.png' %}">
+		<link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
+		<link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
+		<link rel="manifest" href="{% static 'favicon/site.webmanifest' %}">
+		<link rel="mask-icon" href="{% static 'favicon/safari-pinned-tab.svg' %}" color="#5bbad5">
+		<meta name="msapplication-TileColor" content="#da532c">
+		<meta name="theme-color" content="#ffffff">
+		
+		<!--Stylesheet and scripts-->
+		<link rel="stylesheet" href="{% static 'styles/trl.css' %}" type="text/css" />
+		<script type="text/javascript" src="{% static 'scripts/trl.js' %}"></script>
+		<!--HTMX Script-->
+		<script src="https://unpkg.com/htmx.org@1.8.4" integrity="sha384-wg5Y/JwF7VxGk4zLsJEcAojRtlVp1FKKdGy1qN+OMtdq72WRvX/EdRdqg/LOhYeV" crossorigin="anonymous"></script>
+	</head>
+	
+	<body>
+		<header class="navbar">
+			<div class="navbar-left-align">
+				<a href="{% url 'trl:home' %}">
+					<img id="logo" src="{% static 'img/trl_logo.png' %}" alt="TRL Home"/>
+				</a>
+			</div>
+			{% url 'trl:login' as login_url %}
+			<div class="navbar-right-align">
+
+				{% if user.is_authenticated %}
+					<a href="{% url 'trl:logout' %}" id="navbarh-right">LOGOUT</a>
+					<a href="{% url 'trl:portfolio' %}" id="navbarh-right-2">PORTFOLIO</a>
+				{% else %}
+					<a href="{{ login_url|get_login_url }}" id="navbarh-right">LOGIN</a>
+				{% endif %}
+				<a href="{% url 'trl:tutorial' %}" id="navbarh-right-3">HOW TO USE</a>
+				<a href="{% url 'trl:about' %}" id="navbarh-right-4">ABOUT TRL</a>
+			</div>
+		</header>
+		
+		<div class="main">
+		{% block body_block %}
+		{% endblock %}
+		</div>
+		
+		<footer>
+			<div class="left-footer">
+				<p>
+					<img id="uofg-logo" loading="lazy" src="{% static 'img/uofg-logo.svg' %}" alt="University of Glasgow">
+				</p>
+				<ul class="list-inline">
+					<a href="https://www.facebook.com/UofGlasgow">
+						<img style="display: inline-block;" src="{% static 'img/facebook.svg' %}" alt="Facebook">
+					</a>
+					<a href="https://twitter.com/UofGlasgow">
+						<img style="display: inline-block;" src="{% static 'img/twitter.svg' %}" alt="Twitter">
+					</a>
+					<a href="https://www.instagram.com/uofglasgow/">
+						<img style="display: inline-block;" src="{% static 'img/instagram.svg' %}" alt="Instagram">
+					</a>
+					<a href="https://www.youtube.com/uofglasgow">
+						<img style="display: inline-block;" src="{% static 'img/youtube.svg' %}" alt="YouTube">
+					</a>
+				</ul>
+				<p>The University of Glasgow is a registered Scottish charity:</p>
+				<p>Registration Number SC004401</p>
+			</div>
+			<div class="right-footer">
+				<div class="top-right-wrapper">
+					<b>Innovation, Engagement & Economic Development</b>
+					<p>11 The Square</p>
+					<p>University of Glasgow</p>
+					<p>G12 8QQ</p>
+				</div>
+				<div class="bottom-right-wrapper">
+					<p id="telephone">+44 (0)141 330 2730</p>
+					<a id="email" href="mailto:innovation@glasgow.ac.uk"><p>innovation@glasgow.ac.uk</p></a>
+				</div>
+			</div>
+		</footer>
+	</body>
+</html>
